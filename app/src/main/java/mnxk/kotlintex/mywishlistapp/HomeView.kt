@@ -15,7 +15,7 @@ fun HomeView() {
     // A surface container using the 'background' color from the theme
     Scaffold(
         topBar = {
-            AppBarView(title = "My Wish List", {
+            AppBarView(title = "WishList", {
                 Toast.makeText(
                     context,
                     "Back button clicked",
