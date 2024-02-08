@@ -12,6 +12,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import mnxk.kotlintex.mywishlistapp.R.color
 import mnxk.kotlintex.mywishlistapp.R.string.add_wish
 import mnxk.kotlintex.mywishlistapp.R.string.update_wish
 
@@ -43,8 +45,7 @@ fun AddEditDetailView(
                     } else {
                         stringResource(id = add_wish)
                     },
-                onBackNavClick = { navController.popBackStack() },
-            )
+            ) { navController.navigateUp() }
         },
     ) {
         Column(
@@ -78,6 +79,10 @@ fun AddEditDetailView(
                         // TODO Add wish
                     }
                 },
+                colors =
+                    ButtonDefaults.buttonColors(
+                        colorResource(id = color.app_bar_color),
+                    ),
             ) {
                 Text(
                     text =
@@ -91,6 +96,7 @@ fun AddEditDetailView(
                     style =
                         TextStyle(
                             fontSize = 18.sp,
+                            color = Color.White,
                         ),
                 )
             }
@@ -113,10 +119,10 @@ fun WishTextField(
         colors =
             TextFieldDefaults.outlinedTextFieldColors(
                 textColor = Color.Black,
-                focusedBorderColor = colorResource(id = R.color.black),
-                unfocusedBorderColor = colorResource(id = R.color.black),
-                cursorColor = colorResource(id = R.color.black),
-                unfocusedLabelColor = colorResource(id = R.color.black),
+                focusedBorderColor = colorResource(id = color.black),
+                unfocusedBorderColor = colorResource(id = color.black),
+                cursorColor = colorResource(id = color.black),
+                unfocusedLabelColor = colorResource(id = color.black),
             ),
     )
 }
