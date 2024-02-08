@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Scaffold
@@ -19,11 +20,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import mnxk.kotlintex.mywishlistapp.data.DummyWish
 import mnxk.kotlintex.mywishlistapp.data.Wish
 import androidx.compose.material.Icon as Icon
 
 @Composable
-fun HomeView() {
+fun HomeView(
+    navController: NavController,
+    viewModel: WishViewModel,
+) {
     val context = LocalContext.current
     // A surface container using the 'background' color from the theme
     Scaffold(
@@ -47,6 +53,7 @@ fun HomeView() {
                         "Add button clicked",
                         Toast.LENGTH_SHORT,
                     ).show()
+                    navController.navigate(Screen.AddScreen.route)
                 },
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
@@ -59,6 +66,11 @@ fun HomeView() {
                     .fillMaxSize()
                     .padding(it),
         ) {
+            items(DummyWish.wishList) {
+                    wish ->
+                WishItem(wish = wish) {
+                }
+            }
         }
     }
 }
