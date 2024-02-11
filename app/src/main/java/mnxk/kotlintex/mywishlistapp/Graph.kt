@@ -8,6 +8,8 @@ import mnxk.kotlintex.mywishlistapp.data.WishRepository
 object Graph {
     lateinit var database: WishDatabase
 
+    // Lazy initialization is a design pattern that delays the initialization of an object until the
+    // first time it is needed.
     val wishRepository by lazy {
         WishRepository(wishDao = database.wishDao())
     }
