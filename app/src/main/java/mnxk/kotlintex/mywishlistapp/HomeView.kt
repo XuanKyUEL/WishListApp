@@ -15,13 +15,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import mnxk.kotlintex.mywishlistapp.data.DummyWish
 import mnxk.kotlintex.mywishlistapp.data.Wish
 import androidx.compose.material.Icon as Icon
 
@@ -50,25 +50,28 @@ fun HomeView(
                 onClick = { // Todo add navigation to the screen}) {
                     Toast.makeText(
                         context,
-                        "Add button clicked",
+                        "Addind an item to the wishlist",
                         Toast.LENGTH_SHORT,
                     ).show()
-                    navController.navigate(Screen.AddScreen.route)
+                    navController.navigate(Screen.AddScreen.route + "/0L")
                 },
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
         },
     ) {
+        val wishlist = viewModel.getAllWishes.collectAsState(initial = listOf())
         LazyColumn(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .padding(it),
         ) {
-            items(DummyWish.wishList) {
+            items(wishlist.value) {
                     wish ->
                 WishItem(wish = wish) {
+                    val id = wish.id
+                    navController.navigate(Screen.AddScreen.route + "/$id")
                 }
             }
         }
@@ -82,9 +85,12 @@ fun WishItem(
 ) {
     Card(
         modifier =
-            Modifier.fillMaxWidth().padding(top = 8.dp, end = 8.dp).clickable {
-                onClick()
-            },
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp, end = 8.dp)
+                .clickable {
+                    onClick()
+                },
         elevation = 10.dp,
         backgroundColor = Color.White,
     ) {
