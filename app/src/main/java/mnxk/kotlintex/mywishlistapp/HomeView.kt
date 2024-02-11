@@ -9,11 +9,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -25,6 +31,7 @@ import androidx.navigation.NavController
 import mnxk.kotlintex.mywishlistapp.data.Wish
 import androidx.compose.material.Icon as Icon
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(
     navController: NavController,
@@ -67,12 +74,29 @@ fun HomeView(
                     .fillMaxSize()
                     .padding(it),
         ) {
-            items(wishlist.value) {
+            items(wishlist.value, key = { wish -> wish.id }) {
                     wish ->
-                WishItem(wish = wish) {
-                    val id = wish.id
-                    navController.navigate(Screen.AddScreen.route + "/$id")
-                }
+                val dismissState =
+                    rememberDismissState(
+                        confirmValueChange = {
+                            if (it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart) {
+                                viewModel.deleteWish(wish)
+                            }
+                            true
+                        },
+                    )
+                SwipeToDismiss(
+                    state = dismissState,
+                    background = {
+                    },
+                    directions = setOf(DismissDirection.EndToStart, DismissDirection.StartToEnd),
+                    dismissContent = {
+                        WishItem(wish = wish) {
+                            val id = wish.id
+                            navController.navigate(Screen.AddScreen.route + "/$id")
+                        }
+                    },
+                )
             }
         }
     }
@@ -87,19 +111,16 @@ fun WishItem(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp, end = 8.dp)
+                .padding(top = 8.dp, start = 8.dp, end = 8.dp)
                 .clickable {
                     onClick()
                 },
         elevation = 10.dp,
         backgroundColor = Color.White,
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-        ) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Text(text = wish.title, fontWeight = FontWeight.ExtraBold)
-            Text(text = wish.description, fontWeight = FontWeight.Normal)
+            Text(text = wish.description)
         }
     }
-    // Todo add item view
 }
